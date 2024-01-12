@@ -1,4 +1,4 @@
-# PartialInformationTargetDefenseSimulations
+# Partial Information Target Defense Simulations
 This is to generate simulations for partial information target defense games in ROS-Gazebo 
 
 Follows these papers:
