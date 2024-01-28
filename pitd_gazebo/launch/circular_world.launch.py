@@ -28,7 +28,10 @@ def generate_launch_description():
 
     #Sim Variables 
     defender_sensing_radius = 5
-    
+
+    x_pose = LaunchConfiguration('x_pose', default='0.0')
+    y_pose = LaunchConfiguration('y_pose', default='0.0')
+
 
     world = os.path.join(
         get_package_share_directory('pitd_gazebo'),
@@ -59,7 +62,16 @@ def generate_launch_description():
     #               Defender Launch Actions
     #-----------------------------------------------------
 
-    #TODO: add defender launch actions
+    #spawn defender
+    spawn_defender_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(launch_file_dir, 'spawn_defender.launch.py')
+        ),
+        launch_arguments={
+            'x_pose': x_pose,
+            'y_pose': y_pose
+        }.items()
+    )
 
 
     #-----------------------------------------------------
@@ -70,5 +82,6 @@ def generate_launch_description():
 
     ld.add_action(gzserver_cmd)
     ld.add_action(gzclient_cmd)
+    ld.add_action(spawn_defender_cmd)
 
     return ld
