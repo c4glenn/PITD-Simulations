@@ -9,6 +9,7 @@ endif()
 # Find Dependencies
 ##############################################################################################
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
 find_package(gazebo REQUIRED)
 find_package(gazebo_ros_pkgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -42,6 +43,13 @@ set(dependencies
 ##############################################################################################
 # Install
 ##############################################################################################
+
+ament_python_install_package(${PROJECT_NAME})
+
+install(PROGRAMS
+  scripts/gazebo_spawner.py
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 install(DIRECTORY launch models worlds
   DESTINATION share/${PROJECT_NAME}/
