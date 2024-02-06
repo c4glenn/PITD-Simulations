@@ -17,6 +17,7 @@ find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(tf2 REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
 
 ##############################################################################################
@@ -39,12 +40,18 @@ set(dependencies
   "tf2"
 )
 
+set(msg_files
+  "msg/AttackerSpawn.msg"
+)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  ${msg_files}
+  DEPENDENCIES geometry_msgs
+)
 
 ##############################################################################################
 # Install
 ##############################################################################################
-
-ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
   scripts/gazebo_spawner.py
@@ -55,5 +62,7 @@ install(DIRECTORY launch models worlds
   DESTINATION share/${PROJECT_NAME}/
 )
 
+ament_export_dependencies(rosidl_default_runtime)
 
 ament_package()
+
