@@ -17,7 +17,6 @@ find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(tf2 REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
 
 
 ##############################################################################################
@@ -38,15 +37,6 @@ set(dependencies
   "rclcpp"
   "sensor_msgs"
   "tf2"
-)
-
-set(msg_files
-  "msg/AttackerSpawn.msg"
-)
-
-rosidl_generate_interfaces(${PROJECT_NAME}
-  ${msg_files}
-  DEPENDENCIES geometry_msgs
 )
 
 ##############################################################################################

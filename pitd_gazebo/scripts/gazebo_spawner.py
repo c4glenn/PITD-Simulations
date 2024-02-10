@@ -6,7 +6,7 @@ from gazebo_msgs.srv import SpawnEntity
 import os
 from ament_index_python.packages import get_package_share_directory
 from geometry_msgs.msg import Pose
-from pitd_gazebo.msg import AttackerSpawn
+from pitd_interfaces.msg import AttackerSpawn
 
 
 class Spawner(Node):
