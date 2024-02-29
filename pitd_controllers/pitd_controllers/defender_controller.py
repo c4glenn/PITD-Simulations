@@ -16,7 +16,7 @@ import math
 class Defender_control(Node):
     def __init__(self) -> None:
         super().__init__("/defender/controller")
-        self.declare_parameter('sensing_radius', 10.0)
+        self.declare_parameter('defender_sensing_radius', 10.0)
         self.declare_parameter('defender_strategy', 'paper_1')
         self.declare_parameter('attacker_speed', .8)
         self.declare_parameter('attacker_sensing_radius', 2.0)
@@ -39,7 +39,7 @@ class Defender_control(Node):
     
     def load_params(self):
         self.strategy = self.get_parameter('defender_strategy').get_parameter_value().string_value
-        self.sensing_radius = self.get_parameter("sensing_radius").get_parameter_value().double_value
+        self.sensing_radius = self.get_parameter("defender_sensing_radius").get_parameter_value().double_value
         self.attacker_speed = self.get_parameter("attcker_speed").get_parameter_value().double_value
         self.attacker_sensing_radius = self.get_parameter('attacker_sensing_radius').get_parameter_value().double_value
         self.target_radius = self.get_parameter("target_radius").get_parameter_value().double_value
