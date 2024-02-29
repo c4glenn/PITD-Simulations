@@ -4,10 +4,31 @@ import random
 import numpy as np
 from gazebo_msgs.srv import DeleteEntity
 from pitd_interfaces.msg import AttackerSpawn
-from geometry_msgs.msg import Pose, Point
+from geometry_msgs.msg import Pose, Point, Quaternion
 from nav_msgs.msg import Odometry
 from std_msgs.msg import String
 
+
+def quaternion_from_euler(roll, pitch, yaw):
+    """
+    Converts quaternion (w in last place) to euler roll, pitch, yaw
+    quaternion = [w, x, y, z]
+    Bellow should be replaced when porting for ROS 2 Python tf_conversions is done.
+    """
+    cy = np.cos(yaw * 0.5)
+    sy = np.sin(yaw * 0.5)
+    cp = np.cos(pitch * 0.5)
+    sp = np.sin(pitch * 0.5)
+    cr = np.cos(roll * 0.5)
+    sr = np.sin(roll * 0.5)
+
+    q = [0] * 4
+    q[0] = cy * cp * cr + sy * sp * sr
+    q[1] = cy * cp * sr - sy * sp * cr
+    q[2] = sy * cp * sr + cy * sp * cr
+    q[3] = sy * cp * cr - cy * sp * sr
+
+    return q
 
 class World_Controller(Node):
     def __init__(self) -> None:
@@ -69,9 +90,10 @@ class World_Controller(Node):
         self.build_and_publish(x, y, name)
 
     def build_and_publish(self, x, y, name):
+        quat = quaternion_from_euler(0, 0, np.arctan2(y, x) + np.pi)
         attacker = AttackerSpawn()
         attacker.name = name
-        attacker.pose = Pose(position=Point(x=x,y=y))
+        attacker.pose = Pose(position=Point(x=x,y=y), orientation=Quaternion(w=quat[0], x=quat[1], y=quat[2], z=quat[3]))
         self.attackers.append(attacker.name)
         self.attacker_publisher.publish(attacker)
         self.attacker_subs[name] = self.create_subscription(Odometry, f"{name}/odom", lambda x: self.track_attacker(x, name), 10)
