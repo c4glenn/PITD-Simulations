@@ -14,14 +14,14 @@ class Spawner(Node):
         super().__init__("gazeboSpawner")
         self.spawn_client = self.create_client(SpawnEntity, "/spawn_entity")
         while not self.spawn_client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info('Service Not Avaliable, waiting again...')
+            self.get_logger().info('Service (spawn_entity) Not Avaliable, waiting again...')
         self.spawn_sub = self.create_subscription(AttackerSpawn, "/pitd/spawn", self.spawn_attacker_callback, 10)
     
     def spawn_attacker_callback(self, data: AttackerSpawn):
         self.get_logger().info(f"spawning in attacker named {data.name}")
         self.spawn_attacker(data.name, data.pose)
 
-    def spawn_attacker(self, name: str, pose: Pose, trys=0):
+    def spawn_attacker(self, name: str, pose: Pose):
         request = SpawnEntity.Request()
         request.name = name
         TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
@@ -38,20 +38,8 @@ class Spawner(Node):
         request.robot_namespace = name
         request.initial_pose = pose
 
-        future = self.spawn_client.call(request)
-        rclpy.spin_until_future_complete(self, future)
-
-        res = future.result()
-        if not res.success:
-            if trys <= 3:
-                self.get_logger().info(f"failed to spawn, trying again")
-                self.spawn_attacker(name, pose, trys+1)
-            else:
-                self.get_logger().error(f"Failed to spawn attacker with name {name}, message: {res.status_message}")
-
-
+        self.future = self.spawn_client.call_async(request)
         
-
 def main():
     rclpy.init()
     spawner = Spawner()
