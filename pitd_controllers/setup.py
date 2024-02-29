@@ -20,6 +20,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            "world=pitd_controllers.world_controller:main",
+            "attacker=pitd_controllers.attacker_controller:main",
+            "pathing=pitd_controllers.pathing_controller:main"
         ],
     },
 )

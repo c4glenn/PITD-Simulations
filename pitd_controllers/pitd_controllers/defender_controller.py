@@ -7,10 +7,9 @@ from rclpy.context import Context
 from rclpy.node import Node
 from rclpy.parameter import Parameter
 
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, Twist
 from nav_msgs.msg import Odometry
 from pitd_interfaces.msg import AttackerSpawn
-from geometry_msgs.msg import Twist
 import math
 
 
@@ -27,7 +26,7 @@ class Defender_control(Node):
         self.last_known_location = {}
         self.subscribers = {}
         self.attacker_spawn_subscription = self.create_subscription(AttackerSpawn, "/pitd/spawn", self.new_attacker_callback,10)
-        self.cmd_vel = self.create_publisher(Twist, "/defender/cmd_vel", 10)
+        self.cmd_vel = self.create_publisher(Pose, "/defender/goal", 10)
         self.logic_timer = self.create_timer(1/30, self.logic)
 
         self.load_params()
@@ -74,7 +73,7 @@ class Defender_control(Node):
     
 
     def paper1(self):
-        message = Twist()
+        message = Pose()
         if self.subscribers.keys[0] in self.last_known_location.keys:
             attacker = self.subscribers.keys[0]
             # Asymmetric or Engagment Phase
@@ -94,22 +93,7 @@ class Defender_control(Node):
 
         else:
             # Deployment Phase
-            pose_mag = self.vec_mag(self.pose)
-
-            if not (pose_mag <= self.target_radius + self.sensing_radius - self.attacker_sensing_radius):
-                #not following the requirment so head in till you do
-                
-                if self.pose.position.x <= self.pose.position.y:
-                    message.linear.y = math.min(self.pose.position.y, 1)
-                else:
-                    message.linear.x = math.min(self.pose.position.x, 1)
-            else:
-                message.linear.x = 0
-                message.linear.y = 0
-                message.linear.z = 0
-                message.angular.z = 0
-
-        self.cmd_vel.publish(message)
+            pass
 
 def main():
     rclpy.init()
