@@ -27,7 +27,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
 
     #Sim Variables 
-    defender_sensing_radius = 5
+    defender_sensing_radius = LaunchConfiguration('defender_sensing_radius', default=5)
 
     x_pose = LaunchConfiguration('x_pose', default='0.0')
     y_pose = LaunchConfiguration('y_pose', default='0.0')
