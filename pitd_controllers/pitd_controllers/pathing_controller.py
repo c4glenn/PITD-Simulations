@@ -85,7 +85,6 @@ class Pathing(Node):
     def handle_odom(self, data:Odometry, name:str):
         goal = self.goals.get(name, None)
         if not goal:
-            self.get_logger().info(f"{name} has no goal")
             return
         goal_heading = euler_from_quaternion(goal.orientation)[2]
 
@@ -126,9 +125,6 @@ class Pathing(Node):
 
         scaled_dist = np.sign(distance_correction) * min(abs(distance_correction), max_speed)
         scaled_rot = np.sign(rotation_correction) * min(abs(rotation_correction), max_speed)
-
-        self.get_logger().info(f"dist: {distance_error}, rot {theta_error}")
-        self.get_logger().info(f"{data.pose.pose}")
 
         command.linear.x = float(scaled_dist)
         command.angular.z = float(scaled_rot)

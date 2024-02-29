@@ -121,7 +121,6 @@ class World_Controller(Node):
         #self.attackers.pop(self.attackers.index(name))
         #self.attacker_subs[name].destroy() 
         #self.attacker_deleting.publish(String(data=name))
-        self.get_logger().info(f"reached here, {self.attack_spawn_pattern == 1}")
         if self.attack_spawn_pattern == 1:
             self.rand_pose_attack()
 
