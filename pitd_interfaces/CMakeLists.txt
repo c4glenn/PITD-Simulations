@@ -13,6 +13,8 @@ find_package(geometry_msgs REQUIRED)
 
 set(msg_files
   "msg/AttackerSpawn.msg"
+  "msg/Goal.msg"
+  "msg/CaptureInfo.msg"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}

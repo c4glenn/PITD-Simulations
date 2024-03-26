@@ -2,9 +2,10 @@ import rclpy
 from rclpy.node import Node
 
 from geometry_msgs.msg import Pose, Twist
-from pitd_interfaces.msg import AttackerSpawn
+from pitd_interfaces.msg import AttackerSpawn, Goal
 from nav_msgs.msg import Odometry
 from std_msgs.msg import String
+from rcl_interfaces.msg import SetParametersResult
 
 import numpy as np
 
@@ -47,7 +48,7 @@ class Pathing(Node):
         super().__init__("Pather")
 
         self.goal_subs = {
-            "defender":self.create_subscription(Pose, "/defender/goal", lambda x: self.handle_goal(x, "defender"), 10)
+            "defender":self.create_subscription(Goal, "/defender/goal", lambda x: self.handle_goal(x, "defender"), 10)
         }
 
         self.goals: dict[str, Pose] = {}
@@ -65,10 +66,17 @@ class Pathing(Node):
         self.declare_parameter('attacker_speed', .8)
         self.attacker_speed = self.get_parameter("attacker_speed").get_parameter_value().double_value
 
+        # self.add_on_set_parameters_callback(self.params_callback)
+
+    def params_callback(self, params):
+        self.attacker_speed = self.get_parameter("attacker_speed").get_parameter_value().double_value
+
+        return SetParametersResult(successful=True)
+
     
     def new_attacker(self, data: AttackerSpawn):
         self.get_logger().info(f"registering an attacker {data.name}")
-        self.goal_subs[data.name] = self.create_subscription(Pose, f"/{data.name}/goal", lambda x: self.handle_goal(x, data.name), 10)
+        self.goal_subs[data.name] = self.create_subscription(Goal, f"/{data.name}/goal", lambda x: self.handle_goal(x, data.name), 10)
         self.odo_subs[data.name] = self.create_subscription(Odometry, f"/{data.name}/odom", lambda x: self.handle_odom(x, data.name), 10)
         self.cmd_pubs[data.name] = self.create_publisher(Twist, f"/{data.name}/cmd_vel", 10)
 
@@ -79,13 +87,17 @@ class Pathing(Node):
         #del self.odo_subs[data.data]
         pass
         
-    def handle_goal(self, data:Pose, name:str):
+    def handle_goal(self, data:Goal, name:str):
         self.goals[name] = data
 
     def handle_odom(self, data:Odometry, name:str):
+        self.attacker_speed = self.get_parameter("attacker_speed").get_parameter_value().double_value
         goal = self.goals.get(name, None)
         if not goal:
             return
+        min_speed = goal.min_speed
+        goal = goal.pose
+        
         goal_heading = euler_from_quaternion(goal.orientation)[2]
 
         pose = data.pose.pose
@@ -123,8 +135,8 @@ class Pathing(Node):
             distance_correction = distance_error * KP * m
             rotation_correction = theta_error * ROT_KP * -1
 
-        scaled_dist = np.sign(distance_correction) * min(abs(distance_correction), max_speed)
-        scaled_rot = np.sign(rotation_correction) * min(abs(rotation_correction), max_speed)
+        scaled_dist = np.sign(distance_correction) * min(max(abs(distance_correction), min_speed), max_speed)
+        scaled_rot = np.sign(rotation_correction) *  min(max(abs(rotation_correction), min_speed), max_speed)
 
         command.linear.x = float(scaled_dist)
         command.angular.z = float(scaled_rot)
