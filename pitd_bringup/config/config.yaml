@@ -1,0 +1,24 @@
+attacker_controller:
+  ros__parameters:
+    attacker_speed: .8
+    attacker_sensing_radius: 1.0
+    defender_sensing_radius: 4.0
+
+defender_controller:
+  ros__parameters:
+    defender_sensing_radius: 4.0
+    defender_strategy: paper_1
+    attacker_speed: .8
+    attacker_sensing_radius: 1.0
+    target_radius: 0.5
+
+pathing_controller:
+  ros__parameters:
+    attacker_speed: .8
+
+world_controller:
+  ros__parameters:
+    attack_spawn_pattern: 1
+    defender_sensing_radius: 4.0
+    target_radius: 0.5
+    capture_distance: 0.3

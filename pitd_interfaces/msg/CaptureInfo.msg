@@ -1,0 +1,2 @@
+int64 arrivals
+float64 capture_percentage
