@@ -1,0 +1,7 @@
+std_msgs/Header header
+---
+float64 attacker_speed
+float64 defender_speed
+float64 attacker_sensing_radius
+float64 defender_sensing_radius
+float64 target_radius

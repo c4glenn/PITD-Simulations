@@ -17,8 +17,13 @@ set(msg_files
   "msg/CaptureInfo.msg"
 )
 
+set(srv_files
+  "srv/GetParams.srv"
+)
+
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}
+  ${srv_files}
   DEPENDENCIES geometry_msgs
 )
 
