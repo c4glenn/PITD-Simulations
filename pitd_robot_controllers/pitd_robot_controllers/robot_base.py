@@ -21,7 +21,7 @@ class RobotBase(Node):
         self.active = False
         
     def get_params(self) -> None:
-        cli = self.create_client(GetParams, "/settings") = res.create_client(GetParams, "/settings")
+        cli = self.create_client(GetParams, "/settings")
         future = cli.call_service(GetParams.Request())
         rclpy.spin_until_future_complete(self, future)
         res = future.result()
