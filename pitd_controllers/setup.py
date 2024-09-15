@@ -23,7 +23,8 @@ setup(
             "world=pitd_controllers.world_controller:main",
             "defender=pitd_controllers.defender_controller:main",
             "attacker=pitd_controllers.attacker_controller:main",
-            "pathing=pitd_controllers.pathing_controller:main"
+            "pathing=pitd_controllers.pathing_controller:main",
+            "test=scripts.test:main"
         ],
     },
 )

@@ -6,17 +6,23 @@ import numpy as np
 from pitd_interfaces.srv import GetParams
 
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, Twist, Vector3
 from std_msgs.msg import Bool
 
 
 
 class RobotBase(Node):
+    def normalize_angle(self, angle: float) -> float:
+        np.arctan2(np.cos(angle), np.sin(angle))
+
     def __init__(self, node_name: str) -> None:
         super().__init__(node_name)
         self.attacker_pose_sub = self.create_subscription(Odometry, "/attacker/odom", lambda x: self.pose_callback("attacker"))
         self.defender_pose_sub = self.create_subscription(Odometry, "/defender/odom", lambda x: self.pose_callback("defender"))
         self.active_sub = self.create_subscription(Bool, "/active", self.active_callback)
+        self.cmd_pub = None
+
+        self.pub = self.create_publisher(Bool, "test", 10)
         self.get_params()
         self.active = False
         
@@ -38,6 +44,8 @@ class RobotBase(Node):
 
     def call_each_step(self):
         if not self.active:
+            if self.cmd_pub:
+                self.cmd_pub.publish(Twist())
             return
     
     def distance(p1: Pose, p2: Pose) -> float:
