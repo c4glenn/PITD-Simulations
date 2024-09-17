@@ -15,9 +15,9 @@ def generate_launch_description():
             executable="controller",
             name="defender_controller"
         ),
-        # Node(
-        #     package="pitd_robot_controllers",
-        #     executable="position",
-        #     name="position_controller"
-        # )
+        Node(
+            package="pitd_robot_controllers",
+            executable="position",
+            name="position_controller"
+        )
     ])

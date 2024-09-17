@@ -8,12 +8,12 @@ from std_msgs.msg import Bool
 
 import numpy as np
 
-DIST_TOL = 0.01
-ROT_TOL = 0.2
+DIST_TOL = 0.05
+ROT_TOL = 0.034
 TURTLEBOT_MAX_SPEED = 0.07
 TURTLEBOT_MAX_ROT = 1
 
-ATTACKER_MAX_SPEED = 0.6 * TURTLEBOT_MAX_SPEED
+ATTACKER_MAX_SPEED = 0.8 * TURTLEBOT_MAX_SPEED
 
 
 K_rot = 1
@@ -58,7 +58,7 @@ class Controller(Node):
         self.goal_reach_pub.publish(Bool(data=False))
         goal_heading = np.arctan2(self.goal.position.y - self.pose.position.y, self.goal.position.x - self.pose.position.x)
         rotation_error = self.normalize_angle(goal_heading-robot_angle)
-        self.get_logger().info(f"rot: {rotation_error}")
+        self.get_logger().info(f"rot: {rotation_error, goal_heading,robot_angle}")
         # if abs(rotation_error) <= ROT_TOL:
         #     rot_val = 0.0
         # else:
