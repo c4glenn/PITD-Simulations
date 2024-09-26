@@ -6,7 +6,7 @@ from tf_transformations import quaternion_from_euler
 
 import numpy as np
 
-RUN = 3
+RUN = 2
 
 
 def make_pose(x=0, y=0, theta=0) -> Pose:
@@ -22,27 +22,29 @@ def make_pose(x=0, y=0, theta=0) -> Pose:
 
 # defender start, defender engagement, defender end
 s1_d = [make_pose(), 
-        make_pose(0.107, 0.22, 1.1),
-        make_pose(0.253, 0.729, 1.41)]
+        make_pose(0.171, 0.3365, 1.1),
+        make_pose(0.253*2, 0.729*2, 1.41)]
 
-s2_d = [make_pose(0.253, 0.729, 1.41),
-        make_pose(0.185, 0.0375, 0.2),
-        make_pose(0.36425*2.8, 0.12725*2.8, 0.51)]
+s2_d = [make_pose(0.253*2, 0.729*2, 1.41),
+        make_pose(0.37, 0.075, 0.2),
+        make_pose(0.7285*2, 0.2545*2, 0.51)]
 
-s3_d = [make_pose(0.36425*2, 0.127252, 0.51),
+s3_d = [make_pose(),
+        make_pose(0.7285*2, 0.2545*2, 0.51),
         make_pose(0, 0)]
 
 #attacker start, attacker engagment, attacker end
-s1_a = [make_pose(0.5992, 1.1773, 1.1-np.pi), 
-        make_pose(0.2621, 0.515, 1.1-np.pi), 
-        make_pose(0.253, 0.729, 1.41)]
+s1_a = [make_pose(1.1984, 2.3546, 1.1-np.pi), 
+        make_pose(0.2621*2, 0.515*2, 1.1-np.pi), 
+        make_pose(0.253*2, 0.729*2, 1.41)]
 
-s2_a = [make_pose(1.29465, 0.26245, 0.2-np.pi),
-        make_pose(0.26245*2, 0.26245*2, 0.2-np.pi),
-        make_pose(0.36425*2.2, 0.26245*2.2, 0.51)]
+s2_a = [make_pose(2.5893, 0.5249, 0.2-np.pi),
+        make_pose(0.5664*2, 0.1148*2, 0.2-np.pi),
+        make_pose(0.7285*2, 0.2545*2, 0.51)]
 
-s3_a = [make_pose(-1.3078, -0.1864, -3-np.pi),
-        make_pose(-0.242, -0.0345, -3-np.pi)]
+s3_a = [make_pose(-2.6156, -0.3728, -3-np.pi),
+        make_pose(-2.6156, -0.3728, -3-np.pi),
+        make_pose(-0.4841*.8, -0.0690*.8, -3-np.pi)]
 
 
 # "{position: {x: 1.1984, y: 2.3546}}"
@@ -74,6 +76,7 @@ class PositionHandler(Node):
 
 
     def logic_loop_tmr_callback(self) -> None:
+        self.get_logger().info(f"{self.state}")
         if self.state >= len(self.defender_poses):
             return
 
